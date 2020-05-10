@@ -14,32 +14,32 @@ public class User {
 	@Column(nullable=false, length=20)
 	private String userId;
 	@Column(nullable=false, length=20)
-	private String userPw;
+	private String password;
 	@Column(nullable=false, length=20)
-	private String userName;
+	private String name;
 	@Column(nullable=false, length=20)
-	private String userEmail;
+	private String email;
 	
 
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
-	public void setuserPw(String userPw) {
-		this.userPw = userPw;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public void setuserName(String userName) {
-		this.userName = userName;
+	public void setname(String name) {
+		this.name = name;
 	}
 
-	public void setuserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", password=" + userPw + ", name=" + userName + ", email=" + userEmail + "]";
+		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
 	}
 	
 }

@@ -18,19 +18,19 @@ public class UserController {
 	
 	@Autowired
 	private UserRepository userRepository;
-	@PostMapping("/create")
+	
+	@PostMapping("/user/create")
 	public String create(User user) {
 		System.out.print(user);
 		users.add(user);
 		userRepository.save(user);
-		
-		return "redirect:/list";
+		return "redirect:/list"; // redirect =클라이언트로 돌아갔다가 다시 list메소드 실행
 	}
 	
-	@GetMapping("/list")
+	@GetMapping("/list") // redirect 응답
 	public String list(Model model) {
 		model.addAttribute("users", users);
-		return "list";
+		return "list"; //templates - list.html로 정보 전
 	}
 }
  
