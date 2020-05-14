@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.signUp.domain.User;
@@ -14,7 +16,25 @@ import com.signUp.domain.UserRepository;
 @RequestMapping("/users") // 시작위치
 public class UserController {
 	
-	
+	@GetMapping("/form")
+	public String form() {
+		return "/user/form";
+	}
+	@GetMapping("{id}/form")
+	public String updateForm(@PathVariable Long id, Model model) { //URL 변수를 얻어올수 있음
+		User user = userRepository.findById(id).get();
+		model.addAttribute("user", user);					//optional 공부필요
+		
+		return "/user/updateForm";
+	}
+
+	@PutMapping("{id}") //put의 경우 데이터 수정을 한다 라는 규칙, delete 등 사용가능
+	public String update(@PathVariable Long id, User updateUser) { //URL 변수를 얻어올수 있음
+		User user = userRepository.findById(id).get();
+		user.update(updateUser);
+		userRepository.save(user);
+		return "redirect:/users";
+	}
 	@Autowired
 	private UserRepository userRepository;
 	

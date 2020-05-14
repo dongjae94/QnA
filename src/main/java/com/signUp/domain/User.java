@@ -20,6 +20,10 @@ public class User {
 	@Column(nullable=false)
 	private String email;
 	
+	public String getUserId() {
+		return userId;
+	}
+	
 
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -40,6 +44,14 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+	}
+
+
+	public void update(User updateUser) {
+		setUserId(updateUser.userId);
+		setPassword(updateUser.password);
+		setname(updateUser.name);
+		setEmail(updateUser.email);
 	}
 	
 }
