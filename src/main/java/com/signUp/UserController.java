@@ -1,7 +1,5 @@
 package com.signUp;
 
-import com.signUp.domain.*;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,11 @@ import com.signUp.domain.UserRepository;
 @RequestMapping("/users") // 시작위치
 public class UserController {
 	
+	
+
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
-		session.removeAttribute("user");
+		session.removeAttribute("sessiondUser");
 		return "redirect:/";
 	}
 	
@@ -40,7 +40,7 @@ public class UserController {
 		if(!password.equals(user.getPassword())) {
 			return "redirect:/users/loginForm";
 		}
-		session.setAttribute("user", user);
+		session.setAttribute("sessiondUser", user); //model 값과 중복시 오류 발생 
 		return "redirect:/";
 	}
 	
@@ -50,17 +50,30 @@ public class UserController {
 	}
 	
 	@GetMapping("{id}/form")
-	public String updateForm(@PathVariable Long id, Model model) { //URL 변수를 얻어올수 있음
-		User user = userRepository.findById(id).get();
+	public String updateForm(@PathVariable Long id, Model model, HttpSession session) { //URL 변수를 얻어올수 있음
+		Object tempUser = session.getAttribute("sessiondUser");
+		if(tempUser == null) {
+			return "redirect:/users/loginForm";
+		}
+		User sessiondUser = (User) tempUser;
+//		if(!id.equals(sessiondUser.getId())) {
+//			throw new IllegalAccessError();
+//		}
+		User user = userRepository.findById(sessiondUser.getId()).get();
 		model.addAttribute("user", user);					//optional 공부필요
 		
 		return "/user/updateForm";
 	}
 
 	@PutMapping("{id}") //put의 경우 데이터 수정을 한다 라는 규칙, delete 등 사용가능
-	public String update(@PathVariable Long id, User updateUser) { //URL 변수를 얻어올수 있음
-		User user = userRepository.findById(id).get();
-		user.update(updateUser);
+	public String update(@PathVariable Long id, User updatedUser,HttpSession session) { //URL 변수를 얻어올수 있음
+		Object tempUser = session.getAttribute("sessiondUser");
+		if(tempUser == null) {
+			return "redirect:/users/loginForm";
+		}
+		User sessiondUser = (User) tempUser;
+		User user = userRepository.findById(sessiondUser.getId()).get();
+		user.update(updatedUser);
 		userRepository.save(user);
 		return "redirect:/users";
 	}

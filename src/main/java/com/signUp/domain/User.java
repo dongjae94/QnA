@@ -11,7 +11,7 @@ public class User {
 	@GeneratedValue
 	private Long id;
 	
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String userId;
 	@Column(nullable=false)
 	private String password;
@@ -54,6 +54,10 @@ public class User {
 		setPassword(updateUser.password);
 		setname(updateUser.name);
 		setEmail(updateUser.email);
+	}
+
+	public Long getId() {
+		return id;
 	}
 	
 }

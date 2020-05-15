@@ -1,1 +1,2 @@
 INSERT INTO USER (ID, USER_ID, PASSWORD, NAME, EMAIL) VALUES (1, 'dongjae1031', 'password', '이동재', 'dongjae1031@naver.com');
+INSERT INTO USER (ID, USER_ID, PASSWORD, NAME, EMAIL) VALUES (2, 'dongjae1100', 'password', '이동재', 'dongjae1031@naver.com');
