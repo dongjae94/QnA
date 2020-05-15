@@ -1,5 +1,9 @@
 package com.signUp;
 
+import com.signUp.domain.*;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +20,30 @@ import com.signUp.domain.UserRepository;
 @RequestMapping("/users") // 시작위치
 public class UserController {
 	
+	
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		return "/user/login";
+	}
+	
+	@PostMapping("/login")
+	public String login(String userId, String password, HttpSession session) {
+		User user = userRepository.findByUserId(userId);
+		if(user == null) {
+			return "redirect:/users/loginForm";
+		}
+		if(!password.equals(user.getPassword())) {
+			return "redirect:/users/loginForm";
+		}
+		session.setAttribute("user", user);
+		return "redirect:/";
+	}
+	
 	@GetMapping("/form")
 	public String form() {
 		return "/user/form";
 	}
+	
 	@GetMapping("{id}/form")
 	public String updateForm(@PathVariable Long id, Model model) { //URL 변수를 얻어올수 있음
 		User user = userRepository.findById(id).get();
@@ -38,7 +62,7 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@PostMapping("") // users가 들어가면 회원가입-규
+	@PostMapping("") // users가 들어가면 회원가입-규칙
 	public String create(User user) {
 		userRepository.save(user);
 		return "redirect:/users"; // redirect =클라이언트로 돌아갔다가 다시 list메소드 실행
