@@ -20,9 +20,9 @@ public class User {
 	@Column(nullable=false)
 	private String email;
 	
-//	public String getUserId() {
-//		return userId;
-//	}
+	public String getUserId() {
+		return userId;
+	}
 //	
 //	public String getPassword() {
 //		return password;
