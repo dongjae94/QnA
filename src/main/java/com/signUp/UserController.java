@@ -22,7 +22,7 @@ public class UserController {
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
-		session.removeAttribute("sessiondUser");
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
 		return "redirect:/";
 	}
 	
@@ -37,10 +37,10 @@ public class UserController {
 		if(user == null) {
 			return "redirect:/users/loginForm";
 		}
-		if(!password.equals(user.getPassword())) {
+		if(!user.matchPassword(password)) {
 			return "redirect:/users/loginForm";
 		}
-		session.setAttribute("sessiondUser", user); //model 값과 중복시 오류 발생 
+		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user); //model 값과 중복시 오류 발생 
 		return "redirect:/";
 	}
 	
@@ -51,15 +51,17 @@ public class UserController {
 	
 	@GetMapping("{id}/form")
 	public String updateForm(@PathVariable Long id, Model model, HttpSession session) { //URL 변수를 얻어올수 있음
-		Object tempUser = session.getAttribute("sessiondUser");
-		if(tempUser == null) {
+		if(!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/loginForm";
 		}
-		User sessiondUser = (User) tempUser;
+		User sessiondUser = HttpSessionUtils.getUserFromSession(session);
 //		if(!id.equals(sessiondUser.getId())) {
 //			throw new IllegalAccessError();
 //		}
-		User user = userRepository.findById(sessiondUser.getId()).get();
+		if(!sessiondUser.matchId(id)) {
+			throw new IllegalAccessError();
+		}
+		User user = userRepository.findById(id).get();
 		model.addAttribute("user", user);					//optional 공부필요
 		
 		return "/user/updateForm";
@@ -67,15 +69,17 @@ public class UserController {
 
 	@PutMapping("{id}") //put의 경우 데이터 수정을 한다 라는 규칙, delete 등 사용가능
 	public String update(@PathVariable Long id, User updatedUser,HttpSession session) { //URL 변수를 얻어올수 있음
-		Object tempUser = session.getAttribute("sessiondUser");
-		if(tempUser == null) {
+		if(!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/loginForm";
 		}
-		User sessiondUser = (User) tempUser;
-		User user = userRepository.findById(sessiondUser.getId()).get();
+		User sessiondUser = HttpSessionUtils.getUserFromSession(session);
+		if(!sessiondUser.matchId(id)) {
+			throw new IllegalAccessError();
+		}
+		User user = userRepository.findById(id).get();
 		user.update(updatedUser);
 		userRepository.save(user);
-		return "redirect:/users";
+		return "redirect:/";
 	}
 	@Autowired
 	private UserRepository userRepository;

@@ -20,13 +20,13 @@ public class User {
 	@Column(nullable=false)
 	private String email;
 	
-	public String getUserId() {
-		return userId;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
+//	public String getUserId() {
+//		return userId;
+//	}
+//	
+//	public String getPassword() {
+//		return password;
+//	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
@@ -48,7 +48,20 @@ public class User {
 		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
 	}
 
-
+	public boolean matchPassword(String newPassword) {
+		if(newPassword==null) {
+			return false;
+		}
+		return password.equals(newPassword);
+	}
+	public boolean matchId(Long newId) {
+		if(newId==null) {
+			return false;
+		}
+		return id.equals(newId);
+		
+	}
+	
 	public void update(User updateUser) {
 		setUserId(updateUser.userId);
 		setPassword(updateUser.password);
