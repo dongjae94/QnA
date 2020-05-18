@@ -1,5 +1,7 @@
 package com.signUp.domain;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ public class User {
 	@GeneratedValue
 	private Long id;
 	
+
 	@Column(nullable=false, unique=true)
 	private String userId;
 	@Column(nullable=false)
